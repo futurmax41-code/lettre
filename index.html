@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pour toi ❤️</title>
+
+<style>
+body{
+  margin:0;
+  font-family:'Comic Sans MS', cursive, sans-serif;
+  background: radial-gradient(circle at top,#ffccd9,#ff99cc);
+  color:white;
+  text-align:center;
+  overflow-x:hidden;
+}
+
+/* accueil */
+#welcome{
+  position:fixed;
+  inset:0;
+  background: radial-gradient(circle at top,#ff99cc,#ff66aa);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  transition:0.8s;
+}
+
+#welcome.hide{
+  opacity:0;
+  pointer-events:none;
+}
+
+h1{
+  text-shadow:0 0 15px #ff66aa;
+}
+
+.btn{
+  background: linear-gradient(45deg,#ff99cc,#ff66aa);
+  border:none;
+  border-radius:40px;
+  color:white;
+  padding:14px 28px;
+  margin:8px;
+  font-size:16px;
+  box-shadow:0 0 15px #ff66aa;
+  cursor:pointer;
+  transition:0.25s;
+}
+.btn:hover{ transform:scale(1.08); }
+
+.padlock{
+  font-size:80px;
+  margin:20px;
+  transition:0.4s;
+}
+
+.unlock{
+  transform:scale(1.2) rotate(10deg);
+  text-shadow:0 0 25px #ff66aa;
+}
+
+.code{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  margin:20px;
+}
+
+.num{
+  width:60px;
+  height:60px;
+  border-radius:15px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(6px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  cursor:pointer;
+  box-shadow:0 0 10px #ff66aa;
+}
+
+/* pluie */
+.kawaii{
+  position:fixed;
+  top:-30px;
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{ transform:translateY(110vh); opacity:0; }
+}
+</style>
+</head>
+<body>
+
+<!-- 💖 ACCUEIL -->
+<div id="welcome">
+  <h1>💌 J’ai quelque chose à te dire…</h1>
+  <p>Mais tu dois d’abord débloquer mon cœur 😏❤️</p>
+  <button class="btn" onclick="startGame()">Commencer 💕</button>
+</div>
+
+<h1>💖 Débloque mon cœur 💖</h1>
+<p>Trouve les indices pour ouvrir le cadenas 🔐</p>
+
+<div>
+  <button class="btn" onclick="revealHint('bus')">🚌 Ligne de bus</button>
+  <button class="btn" onclick="revealHint('blaze')">😏 Blaze Valence</button>
+  <button class="btn" onclick="revealHint('insta')">📱 Ancien Insta</button>
+  <button class="btn" onclick="revealHint('jeu')">🎮 Jeu préféré</button>
+  <button class="btn" onclick="revealHint('bonus')">💎 Tout débloquer</button>
+  <p id="hintStatus"></p>
+</div>
+
+<div id="indices">
+  <p id="indice1">Indice 1 : 🔒</p>
+  <p id="indice2">Indice 2 : 🔒</p>
+  <p id="indice3">Indice 3 : 🔒</p>
+</div>
+
+<div class="padlock">🔒</div>
+
+<div class="code">
+  <div class="num" onclick="next(this)">0</div>
+  <div class="num" onclick="next(this)">0</div>
+  <div class="num" onclick="next(this)">0</div>
+  <div class="num" onclick="next(this)">0</div>
+</div>
+
+<button class="btn" onclick="checkCode()">Vérifier 💕</button>
+<p id="status"></p>
+
+<!-- 🎵 musique douce (optionnelle, remplace le mp3 si tu veux) -->
+<audio autoplay loop volume="0.4">
+  <source src="" type="audio/mpeg">
+</audio>
+
+<script>
+// ===== accueil =====
+function startGame(){
+  document.getElementById("welcome").classList.add("hide");
+}
+
+// ===== variables =====
+const codeFinal="5219";
+let bonusLockedUntil=0;
+
+function normalize(t){
+  return t.toLowerCase().trim();
+}
+
+// ===== pluie kawaii =====
+setInterval(()=>{
+  const s=["💖","🌸","💌","🌷","💕"];
+  const el=document.createElement("div");
+  el.className="kawaii";
+  el.innerHTML=s[Math.floor(Math.random()*s.length)];
+  el.style.left=Math.random()*100+"vw";
+  el.style.animationDuration=(4+Math.random()*3)+"s";
+  el.style.fontSize=(16+Math.random()*20)+"px";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),7000);
+},300);
+
+// ===== indices =====
+function revealHint(option){
+  const status=document.getElementById("hintStatus");
+
+  if(option==='bus'){
+    const a=normalize(prompt("C’est quoi mon ligne de bus ? 🚌"));
+    if(a==="l10"){
+      document.getElementById("indice1").textContent="Indice 1 : 5 🚌";
+      status.textContent="Bien joué ❤️";
+    } else status.textContent="Essaie encore 😘";
+  }
+
+  if(option==='blaze'){
+    const a=normalize(prompt("C’est quoi mon blaze à Valence d’Agen ? 😏"));
+    if(a==="rk klm"||a==="klm rk"){
+      document.getElementById("indice2").textContent="Indice 2 : 2 🔥";
+      status.textContent="Bien joué ❤️";
+    } else status.textContent="Essaie encore 😘";
+  }
+
+  if(option==='insta'){
+    const a=normalize(prompt("Mon ancien blaze Insta ? 📱"));
+    if(a==="rk.klm"){
+      document.getElementById("indice3").textContent="Indice 3 : 1 📸";
+      status.textContent="Bien joué ❤️";
+    } else status.textContent="Essaie encore 😘";
+  }
+
+  if(option==='jeu'){
+    const a=normalize(prompt("Mon jeu préféré ? 🎮"));
+    if(a==="rocket league"){
+      if(!document.getElementById("indice4")){
+        const p=document.createElement("p");
+        p.id="indice4";
+        document.getElementById("indices").appendChild(p);
+      }
+      document.getElementById("indice4").textContent="Indice 4 : 9 🎮";
+      status.textContent="Bien joué ❤️";
+    } else status.textContent="Essaie encore 😘";
+  }
+
+  // ===== BONUS =====
+  if(option==='bonus'){
+    const now=Date.now();
+
+    if(now<bonusLockedUntil){
+      const min=Math.ceil((bonusLockedUntil-now)/60000);
+      status.textContent="⏳ Attends "+min+" min avant de réessayer 😘";
+      return;
+    }
+
+    const a=normalize(prompt("C’est quoi mon plat préféré ? 😏"));
+
+    if(a==="me"){
+      document.getElementById("indice1").textContent="Indice 1 : 5";
+      document.getElementById("indice2").textContent="Indice 2 : 2";
+      document.getElementById("indice3").textContent="Indice 3 : 1";
+
+      if(!document.getElementById("indice4")){
+        const p=document.createElement("p");
+        p.id="indice4";
+        document.getElementById("indices").appendChild(p);
+      }
+      document.getElementById("indice4").textContent="Indice 4 : 9";
+
+      status.textContent="💖 Tous les indices révélés !";
+    } else {
+      bonusLockedUntil=now+3600000;
+      status.textContent="❌ Mauvaise réponse… reviens dans 1h 😈";
+    }
+  }
+}
+
+// ===== cadenas =====
+function next(el){
+  el.textContent=(parseInt(el.textContent)+1)%10;
+}
+
+function checkCode(){
+  let code="";
+  document.querySelectorAll(".num").forEach(n=>code+=n.textContent);
+  const status=document.getElementById("status");
+
+  if(code===codeFinal){
+    status.textContent="Cadenas ouvert ❤️";
+    document.querySelector(".padlock").textContent="🔓";
+    document.querySelector(".padlock").classList.add("unlock");
+    setTimeout(()=>location.href="sorpresa.html",1500);
+  } else {
+    status.textContent="Essaie encore 😘";
+  }
+}
+</script>
+</body>
+</html>
