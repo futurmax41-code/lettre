@@ -83,7 +83,7 @@ h1{
   box-shadow:0 0 10px #ff66aa;
 }
 
-/* pluie */
+/* pluie kawaii */
 .kawaii{
   position:fixed;
   top:-30px;
@@ -133,26 +133,28 @@ h1{
 <button class="btn" onclick="checkCode()">Vérifier 💕</button>
 <p id="status"></p>
 
-<!-- 🎵 musique douce (optionnelle, remplace le mp3 si tu veux) -->
-<audio autoplay loop volume="0.4">
-  <source src="" type="audio/mpeg">
-</audio>
-
 <script>
-// ===== accueil =====
+// ===== ACCUEIL =====
 function startGame(){
   document.getElementById("welcome").classList.add("hide");
 }
 
-// ===== variables =====
+// ===== VARIABLES =====
 const codeFinal="5219";
 let bonusLockedUntil=0;
 
-function normalize(t){
-  return t.toLowerCase().trim();
+// ===== LOCAL STORAGE POUR COOLDOWN =====
+function getBonusLock(){
+  return parseInt(localStorage.getItem("bonusLockedUntil") || "0");
+}
+function setBonusLock(time){
+  localStorage.setItem("bonusLockedUntil", time.toString());
 }
 
-// ===== pluie kawaii =====
+// ===== NORMALIZE =====
+function normalize(t){ return t.toLowerCase().trim(); }
+
+// ===== PLUIE KAWAII =====
 setInterval(()=>{
   const s=["💖","🌸","💌","🌷","💕"];
   const el=document.createElement("div");
@@ -165,10 +167,12 @@ setInterval(()=>{
   setTimeout(()=>el.remove(),7000);
 },300);
 
-// ===== indices =====
+// ===== INDICES =====
 function revealHint(option){
   const status=document.getElementById("hintStatus");
+  const now=Date.now();
 
+  // 🔹 INDICE 1
   if(option==='bus'){
     const a=normalize(prompt("C’est quoi mon ligne de bus ? 🚌"));
     if(a==="l10"){
@@ -177,6 +181,7 @@ function revealHint(option){
     } else status.textContent="Essaie encore 😘";
   }
 
+  // 🔹 INDICE 2
   if(option==='blaze'){
     const a=normalize(prompt("C’est quoi mon blaze à Valence d’Agen ? 😏"));
     if(a==="rk klm"||a==="klm rk"){
@@ -185,6 +190,7 @@ function revealHint(option){
     } else status.textContent="Essaie encore 😘";
   }
 
+  // 🔹 INDICE 3
   if(option==='insta'){
     const a=normalize(prompt("Mon ancien blaze Insta ? 📱"));
     if(a==="rk.klm"){
@@ -193,6 +199,7 @@ function revealHint(option){
     } else status.textContent="Essaie encore 😘";
   }
 
+  // 🔹 INDICE 4
   if(option==='jeu'){
     const a=normalize(prompt("Mon jeu préféré ? 🎮"));
     if(a==="rocket league"){
@@ -206,18 +213,15 @@ function revealHint(option){
     } else status.textContent="Essaie encore 😘";
   }
 
-  // ===== BONUS =====
+  // 🔹 BONUS — TOUT DÉBLOQUER avec cooldown 1h
   if(option==='bonus'){
-    const now=Date.now();
-
-    if(now<bonusLockedUntil){
-      const min=Math.ceil((bonusLockedUntil-now)/60000);
+    const lockedUntil=getBonusLock();
+    if(now<lockedUntil){
+      const min=Math.ceil((lockedUntil-now)/60000);
       status.textContent="⏳ Attends "+min+" min avant de réessayer 😘";
       return;
     }
-
     const a=normalize(prompt("C’est quoi mon plat préféré ? 😏"));
-
     if(a==="me"){
       document.getElementById("indice1").textContent="Indice 1 : 5";
       document.getElementById("indice2").textContent="Indice 2 : 2";
@@ -232,13 +236,14 @@ function revealHint(option){
 
       status.textContent="💖 Tous les indices révélés !";
     } else {
-      bonusLockedUntil=now+3600000;
+      const lockTime = now + 3600000; // 1 heure
+      setBonusLock(lockTime);
       status.textContent="❌ Mauvaise réponse… reviens dans 1h 😈";
     }
   }
 }
 
-// ===== cadenas =====
+// ===== CADENAS =====
 function next(el){
   el.textContent=(parseInt(el.textContent)+1)%10;
 }
