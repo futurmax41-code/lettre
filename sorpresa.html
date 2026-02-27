@@ -3,154 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💖 Surprise Royale 💖</title>
+<title>Pour toi mon amour ❤️</title>
+
 <style>
-body {
+:root{
+  --gold:#ffd700;
+  --rose:#ff4d88;
+}
+
+/* ===== FOND ===== */
+body{
   margin:0;
   height:100vh;
-  font-family:'Comic Sans MS', cursive;
-  background: radial-gradient(circle,#ffccdd,#ff99cc);
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at top,#2b0018,#000);
+  font-family:'Georgia', serif;
   overflow:hidden;
-  position:relative;
 }
 
-/* Table royale */
-.table {
+/* ===== TABLE ROYALE ===== */
+.table{
   position:relative;
   width:90%;
-  max-width:700px;
-  height:400px;
-  background: linear-gradient(to bottom,#b88d60,#a67c52);
-  border-radius:20px;
-  box-shadow:0 0 50px rgba(0,0,0,0.5);
+  max-width:720px;
+  height:420px;
+  background:linear-gradient(180deg,#4a001f,#2b0018);
+  border-radius:30px;
+  box-shadow:0 0 70px rgba(255,0,120,0.35);
   display:flex;
+  align-items:flex-end;
   justify-content:center;
-  align-items:flex-start;
+  padding-bottom:40px;
 }
 
-/* Bouquet stylisé avec 100 roses CSS */
-.bouquet {
-  position:relative;
-  width:120px;
-  height:160px;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  cursor:default;
-}
-.bouquet span {
-  width:12px;
-  height:12px;
-  background:red;
-  border-radius:50%;
-  margin:1px;
-  box-shadow:0 0 4px rgba(0,0,0,0.3);
-}
-
-/* Enveloppe royale */
-.enveloppe {
+/* ===== BOUQUET REALISTE ===== */
+.bouquet{
   position:absolute;
-  width:50px;
-  height:35px;
-  top:-30px;
-  left:50%;
-  transform:translateX(-50%);
-  background: gold;
-  border:2px solid #fff;
-  border-radius:5px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  bottom:70px;
+  width:240px;
+  filter:drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+}
+
+/* ===== ENVELOPPE ===== */
+.envelope{
+  position:absolute;
+  bottom:130px;
+  width:140px;
+  height:90px;
+  background:linear-gradient(135deg,#ffe066,var(--gold));
+  border-radius:12px;
   cursor:pointer;
-  font-size:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  box-shadow:0 0 30px gold;
+  transition:0.35s;
 }
 
-/* Lettre royale */
-.lettre {
+.envelope:hover{
+  transform:scale(1.08) rotate(-2deg);
+}
+
+/* ===== LETTRE ===== */
+.letter{
   position:absolute;
-  top:50%;
-  left:50%;
-  width:80%;
-  max-width:500px;
-  transform:translate(-50%,-50%) scale(0);
-  background: linear-gradient(to bottom, #fff8dc, #ffe4b5);
-  border:2px solid gold;
-  border-radius:15px;
-  padding:20px;
+  bottom:140px;
+  width:85%;
+  max-width:480px;
+  background:linear-gradient(180deg,#fff8dc,#ffe4b5);
+  border-radius:22px;
+  padding:30px;
   text-align:center;
+  color:#5a0033;
   font-size:18px;
-  color:#444;
-  z-index:10;
-  box-shadow:0 0 30px rgba(0,0,0,0.5);
-  transition: transform 0.6s ease, opacity 0.6s ease;
+  line-height:1.7;
+  box-shadow:0 0 45px rgba(255,215,0,0.5);
   opacity:0;
+  transform:translateY(60px) scale(.9);
+  transition:0.7s cubic-bezier(.2,.8,.2,1);
+  pointer-events:none;
 }
 
-/* Afficher lettre */
-.lettre.show {
-  transform:translate(-50%,-50%) scale(1);
+.letter.show{
   opacity:1;
+  transform:translateY(-140px) scale(1);
 }
 
-/* Cœurs tombants */
-.heart {
-  position:absolute;
-  font-size:20px;
-  animation:fall 5s linear forwards;
+/* ===== COEURS / FLEURS QUI TOMBENT ===== */
+.flower{
+  position:fixed;
+  top:-30px;
+  animation:fall linear forwards;
+  font-size:22px;
 }
-@keyframes fall {
-  0% { transform: translateY(-30px); opacity:1; }
-  100% { transform: translateY(110vh); opacity:0; }
-}
-</style>
-</head>
-<body>
 
-<div class="table">
-  <div class="bouquet" id="bouquet">
-    <!-- 100 roses CSS -->
-    <script>
-      for(let i=0;i<100;i++){
-        const r=document.createElement("span");
-        document.getElementById("bouquet").appendChild(r);
-      }
-    </script>
-    <div class="enveloppe" id="env">📩</div>
-  </div>
-</div>
-
-<div class="lettre" id="lettre">
-  💌 Mon amour…<br><br>
-  Si tu es là, c’est que tu comptes énormément pour moi ❤️<br>
-  Tu me manques beaucoup, et je suis désolé pour toutes les fois où je t’ai blessée…<br>
-  Je tiens à toi plus que tu ne l’imagines.<br><br>
-  <strong>Je t’aime fort. ❤️ — Erkheli</strong><br><br>
-  <button onclick="closeLettre()" class="btn">Fermer 💕</button>
-</div>
-
-<script>
-const env=document.getElementById("env");
-const lettre=document.getElementById("lettre");
-
-env.onclick=function(){
-  lettre.classList.add("show");
-  // Lancer pluie de cœurs
-  for(let i=0;i<30;i++){
-    const h=document.createElement("div");
-    h.className="heart";
-    h.textContent="💖";
-    h.style.left=Math.random()*100+"vw";
-    h.style.animationDuration=(3+Math.random()*2)+"s";
-    document.body.appendChild(h);
-    setTimeout(()=>{h.remove()},5000);
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+    opacity:0;
   }
 }
 
-function closeLettre(){ lettre.classList.remove("show"); }
+/* ===== RESPONSIVE ===== */
+@media(max-width:500px){
+  .table{ height:360px; }
+  .letter{ font-size:16px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="table">
+
+  <!-- Bouquet réaliste -->
+  <img class="bouquet"
+  src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Rose_bouquet.png/512px-Rose_bouquet.png"
+  alt="Bouquet de roses">
+
+  <!-- Enveloppe -->
+  <div class="envelope" onclick="openLetter()">💌</div>
+
+  <!-- Lettre romantique -->
+  <div class="letter" id="letter">
+    Mon amour ❤️<br><br>
+
+    Depuis que tu es entrée dans ma vie,  
+    tout est devenu plus beau…  
+
+    Je sais que parfois j’ai fait des erreurs,  
+    et je suis sincèrement désolé pour les fois  
+    où j’ai pu te faire du mal.  
+
+    Mais une chose ne change pas :  
+    <b>tu comptes énormément pour moi.</b>  
+
+    Tu me manques tous les jours…  
+    et j’espère continuer à te rendre heureuse. 💖  
+  </div>
+
+</div>
+
+<script>
+
+/* ===== OUVERTURE ENVELOPPE ===== */
+function openLetter(){
+  document.getElementById("letter").classList.add("show");
+}
+
+/* ===== PLUIE ROMANTIQUE ===== */
+setInterval(()=>{
+  const items=["🌹","🌸","💖","💕","🌺"];
+  const el=document.createElement("div");
+  el.className="flower";
+  el.innerHTML=items[Math.floor(Math.random()*items.length)];
+  el.style.left=Math.random()*100+"vw";
+  el.style.animationDuration=(5+Math.random()*4)+"s";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),9000);
+},400);
+
 </script>
 
 </body>
