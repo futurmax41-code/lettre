@@ -2,204 +2,136 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pour toi ❤️</title>
+<title>Surprise mon amour 💘</title>
 
 <style>
-:root{
-  --rose:#ff4d88;
-}
-
-/* ===== FOND ===== */
 body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:radial-gradient(circle at top,#2b0018,#000);
-  font-family:'Georgia', serif;
-  overflow:hidden;
-  color:white;
-  text-align:center;
+margin:0;
+height:100vh;
+background: radial-gradient(circle at center,
+#1a0033,
+#000000);
+overflow:hidden;
+font-family: 'Georgia', serif;
 }
 
-/* étoiles */
-.star{
-  position:fixed;
-  width:2px;
-  height:2px;
-  background:white;
-  border-radius:50%;
-  animation:twinkle 2s infinite alternate;
-}
-@keyframes twinkle{
-  from{opacity:.2}
-  to{opacity:1}
-}
-
-/* coeur */
-.heart{
-  font-size:120px;
-  cursor:pointer;
-  animation:beat 1s infinite;
-  filter:drop-shadow(0 0 25px var(--rose));
-}
-@keyframes beat{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.15)}
+/* 🌌 Trou noir romantique */
+.blackhole{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:300px;
+height:300px;
+border-radius:50%;
+background: radial-gradient(circle,
+#000,
+#2b004f,
+#000);
+box-shadow:
+0 0 60px #ff4d88,
+0 0 120px #9900ff;
+animation: spin 20s linear infinite;
 }
 
-/* texte */
-.tap{
-  margin-top:10px;
-  font-size:20px;
-  color:#ffd6e7;
+@keyframes spin{
+from{transform:translate(-50%,-50%) rotate(0deg);}
+to{transform:translate(-50%,-50%) rotate(360deg);}
 }
 
-/* lettre */
+/* 💌 enveloppe royale */
+.envelope{
+position:absolute;
+top:55%;
+left:50%;
+transform:translate(-50%,-50%);
+width:180px;
+height:120px;
+background: linear-gradient(135deg,#fff,#ffe6f2);
+border-radius:12px;
+cursor:pointer;
+box-shadow:0 0 25px rgba(255,255,255,0.6);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:60px;
+}
+
+/* 📜 lettre */
 .letter{
-  position:absolute;
-  left:50%;
-  transform:translate(-50%,40px) scale(.9);
-  width:90vw;
-  max-width:480px;
-  background:linear-gradient(180deg,#fff8dc,#ffe4b5);
-  color:#5a0033;
-  border-radius:22px;
-  padding:30px;
-  line-height:1.7;
-  box-shadow:0 0 50px rgba(255,215,0,.5);
-  opacity:0;
-  transition:.8s cubic-bezier(.2,.8,.2,1);
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(0);
+width:320px;
+padding:30px;
+background:linear-gradient(#fff,#fff0f5);
+border-radius:20px;
+text-align:center;
+font-size:20px;
+transition:0.6s;
+box-shadow:0 0 40px rgba(255,255,255,0.7);
 }
 
 .letter.show{
-  opacity:1;
-  transform:translate(-50%,-40px) scale(1);
+transform:translate(-50%,-50%) scale(1);
 }
 
-/* pluie */
-.flower{
-  position:fixed;
-  top:-30px;
-  animation:fall linear forwards;
-  font-size:22px;
-}
-@keyframes fall{
-  to{
-    transform:translateY(110vh) rotate(360deg);
-    opacity:0;
-  }
+/* 🌹 roses réalistes */
+.rose{
+position:absolute;
+font-size:30px;
+animation: float 6s infinite ease-in-out;
 }
 
-/* explosion */
-.burst{
-  position:fixed;
-  font-size:24px;
-  animation:burstAnim 1s forwards;
-}
-@keyframes burstAnim{
-  to{
-    transform:translate(var(--x),var(--y)) scale(0);
-    opacity:0;
-  }
+@keyframes float{
+0%{transform:translateY(0);}
+50%{transform:translateY(-20px);}
+100%{transform:translateY(0);}
 }
 
-/* easter egg caché */
-.secret{
-  position:fixed;
-  bottom:5px;
-  right:8px;
-  opacity:.15;
-  font-size:12px;
-  cursor:pointer;
+/* 💖 signature */
+.signature{
+font-size:32px;
+color:#ff4d88;
+text-shadow:0 0 15px #ff99cc;
+margin-top:15px;
 }
-.secret:hover{opacity:.6;}
 </style>
 </head>
 
 <body>
 
-<div class="scene">
-  <div class="heart" onclick="openLetter()">❤️</div>
-  <div class="tap">Appuie sur mon cœur… 💖</div>
+<div class="blackhole"></div>
 
-  <div class="letter" id="letter">
-    Mon amour ❤️<br><br>
-
-    Depuis que tu es entrée dans ma vie,  
-    tout est devenu plus beau…  
-
-    Je suis sincèrement désolé pour  
-    toutes les fois où j’ai pu te blesser.  
-
-    Mais une chose ne changera jamais :  
-    <b>tu comptes énormément pour moi.</b>  
-
-    Tu me manques chaque jour…  
-    et je t’aime très fort. 💕
-  </div>
+<div class="envelope" onclick="openLetter()">
+💌
 </div>
 
-<!-- easter egg -->
-<div class="secret" onclick="secretMsg()">✨</div>
+<div id="letter" class="letter">
+<p>
+Depuis le premier regard…<br>
+j’ai su que toi et moi c’était écrit. ✨
+</p>
 
-<!-- musique romantique -->
-<audio id="music" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-</audio>
+<p>
+Tu es mon bonheur, ma folie,<br>
+et la plus belle chose qui me soit arrivée.
+</p>
+
+<div class="signature">❤️ L ❤️</div>
+</div>
+
+<!-- 🌹 roses décor -->
+<div class="rose" style="top:10%;left:15%;">🌹</div>
+<div class="rose" style="top:20%;left:80%;">🌹</div>
+<div class="rose" style="top:75%;left:20%;">🌹</div>
+<div class="rose" style="top:85%;left:70%;">🌹</div>
 
 <script>
-
-/* ===== ouverture ===== */
 function openLetter(){
-  document.getElementById("letter").classList.add("show");
-
-  // musique (marche après interaction)
-  document.getElementById("music").play().catch(()=>{});
-
-  // explosion de coeurs
-  for(let i=0;i<18;i++){
-    const b=document.createElement("div");
-    b.className="burst";
-    b.innerHTML=["💖","💕","💘","💗"][Math.floor(Math.random()*4)];
-    b.style.left="50vw";
-    b.style.top="50vh";
-    b.style.setProperty("--x",(Math.random()*400-200)+"px");
-    b.style.setProperty("--y",(Math.random()*400-200)+"px");
-    document.body.appendChild(b);
-    setTimeout(()=>b.remove(),1000);
-  }
+document.getElementById("letter").classList.add("show");
 }
-
-/* ===== étoiles ===== */
-for(let i=0;i<70;i++){
-  const s=document.createElement("div");
-  s.className="star";
-  s.style.left=Math.random()*100+"vw";
-  s.style.top=Math.random()*100+"vh";
-  s.style.animationDuration=(1+Math.random()*2)+"s";
-  document.body.appendChild(s);
-}
-
-/* ===== pluie love ===== */
-setInterval(()=>{
-  const items=["🌹","🌸","💖","💕","🌺"];
-  const el=document.createElement("div");
-  el.className="flower";
-  el.innerHTML=items[Math.floor(Math.random()*items.length)];
-  el.style.left=Math.random()*100+"vw";
-  el.style.animationDuration=(5+Math.random()*4)+"s";
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),9000);
-},400);
-
-/* ===== easter egg ===== */
-function secretMsg(){
-  alert("😏 Petit secret… Je t’aime encore plus que tu ne le crois ❤️");
-}
-
 </script>
 
 </body>
