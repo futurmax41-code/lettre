@@ -28,19 +28,11 @@ body{
 }
 #welcome.hide{opacity:0; pointer-events:none;}
 
-h1{text-shadow:0 0 15px #ff66aa;}
-
 .btn{
   background: linear-gradient(45deg,#ff99cc,#ff66aa);
-  border:none;
-  border-radius:40px;
-  color:white;
-  padding:14px 28px;
-  margin:8px;
-  font-size:16px;
-  box-shadow:0 0 15px #ff66aa;
-  cursor:pointer;
-  transition:0.25s;
+  border:none;border-radius:40px;color:white;
+  padding:14px 28px;margin:8px;font-size:16px;
+  box-shadow:0 0 15px #ff66aa;cursor:pointer;
 }
 .btn:hover{ transform:scale(1.08); }
 
@@ -52,21 +44,15 @@ h1{text-shadow:0 0 15px #ff66aa;}
 .num{
   width:60px;height:60px;border-radius:15px;
   background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(6px);
-  display:flex; align-items:center; justify-content:center;
-  font-size:22px; cursor:pointer;
-  box-shadow:0 0 10px #ff66aa;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;cursor:pointer;
 }
 
-.kawaii{ position:fixed; top:-30px; animation:fall linear forwards; }
-@keyframes fall{ to{ transform:translateY(110vh); opacity:0; } }
-
-#timer{ font-size:16px; margin-top:5px; }
+#timer{ margin-top:8px; font-weight:bold; }
 </style>
 </head>
 <body>
 
-<!-- ÉCRAN ACCUEIL -->
 <div id="welcome">
   <h1>💌 J’ai quelque chose à te dire…</h1>
   <p>Mais tu dois d’abord débloquer mon cœur 😏❤️</p>
@@ -74,20 +60,18 @@ h1{text-shadow:0 0 15px #ff66aa;}
 </div>
 
 <h1>💖 Débloque mon cœur 💖</h1>
-<p>Trouve les indices pour ouvrir le cadenas 🔐</p>
 
 <div>
   <button class="btn" onclick="revealHint('bus')">🚌 Ligne de bus</button>
   <button class="btn" onclick="revealHint('blaze')">😏 Blaze Valence</button>
   <button class="btn" onclick="revealHint('insta')">📱 Ancien Insta</button>
   <button class="btn" onclick="revealHint('jeu')">🎮 Jeu préféré</button>
-  <button class="btn" onclick="revealHint('bonus')">💎 Question ultime</button>
+  <button class="btn" onclick="ultimate()">💎 Question ultime</button>
 
   <p id="hintStatus"></p>
   <p id="timer"></p>
 </div>
 
-<!-- ✅ MAINTENANT 4 INDICES -->
 <div id="indices">
   <p id="indice1">Indice 1 : 🔒</p>
   <p id="indice2">Indice 2 : 🔒</p>
@@ -114,102 +98,96 @@ function startGame(){
 }
 
 const codeFinal="07083";
-let bonusAttempts=0;
-let bonusLockedUntil=0;
 
+/* 🔐 stockage persistant */
+let lockUntil=parseInt(localStorage.getItem("lockUntil")||"0");
+let ultimateFails=parseInt(localStorage.getItem("ultimateFails")||"0");
+
+/* 🧠 util */
 function normalize(t){ return t.toLowerCase().trim(); }
 
-// pluie kawaii
-setInterval(()=>{
-  const s=["💖","🌸","💌","🌷","💕"];
-  const el=document.createElement("div");
-  el.className="kawaii";
-  el.innerHTML=s[Math.floor(Math.random()*s.length)];
-  el.style.left=Math.random()*100+"vw";
-  el.style.animationDuration=(4+Math.random()*3)+"s";
-  el.style.fontSize=(16+Math.random()*20)+"px";
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),7000);
-},300);
+/* ⏱️ TIMER */
+function updateTimer(){
+  const el=document.getElementById("timer");
 
-// TIMER
-function startTimer(timeEnd){
-  const timerEl=document.getElementById("timer");
-  clearInterval(window.timerInterval);
-
-  window.timerInterval=setInterval(()=>{
-    let t=Math.max(0, Math.floor((timeEnd-Date.now())/1000));
-    let m=Math.floor(t/60);
-    let s=t%60;
-    timerEl.textContent=`Temps avant prochaine tentative: ${m}:${s<10?'0':''}${s}`;
-    if(t<=0){
-      clearInterval(window.timerInterval);
-      timerEl.textContent='';
-    }
-  },500);
-}
-
-function wrong(){
-  bonusAttempts++;
-  let waitTime=0;
-
-  if(bonusAttempts==1) waitTime=3600000;
-  else if(bonusAttempts==2) waitTime=18000000;
-  else waitTime=36000000;
-
-  bonusLockedUntil=Date.now()+waitTime;
-  startTimer(bonusLockedUntil);
-}
-
-// QUESTIONS
-function revealHint(option){
-  const status=document.getElementById("hintStatus");
-  const now=Date.now();
-
-  if(now<bonusLockedUntil){
-    status.textContent="⏳ Attends avant de réessayer 😘";
+  if(Date.now()>=lockUntil){
+    el.textContent="";
     return;
   }
 
-  // ✅ Indice 1 → chiffre 0
-  if(option==='bus'){
-    const a=normalize(prompt("C’est quoi mon ligne de bus ? 🚌"));
-    if(a==="l10"){
-      document.getElementById("indice1").textContent="Indice 1 : 0 🚌";
-      status.textContent="Bien joué ❤️";
-    } else { status.textContent="❌ Mauvaise réponse"; wrong(); }
+  const diff=Math.floor((lockUntil-Date.now())/1000);
+  const m=Math.floor(diff/60);
+  const s=diff%60;
+  el.textContent=`⏳ Attends ${m}:${s<10?'0':''}${s}`;
+}
+setInterval(updateTimer,500);
+
+/* ❌ lock 10 min */
+function lock10min(){
+  lockUntil=Date.now()+10*60*1000;
+  localStorage.setItem("lockUntil",lockUntil);
+}
+
+/* 💀 lock ultime progressif */
+function lockUltimate(){
+  ultimateFails++;
+  localStorage.setItem("ultimateFails",ultimateFails);
+
+  let wait;
+  if(ultimateFails===1) wait=1;
+  else if(ultimateFails===2) wait=5;
+  else wait=10;
+
+  lockUntil=Date.now()+wait*60*60*1000;
+  localStorage.setItem("lockUntil",lockUntil);
+}
+
+/* 🎯 QUESTIONS */
+function revealHint(type){
+  if(Date.now()<lockUntil){
+    document.getElementById("hintStatus").textContent="⏳ Attends mon cœur";
+    return;
   }
 
-  // ✅ Indice 2 → chiffre 7
-  if(option==='blaze'){
-    const a=normalize(prompt("C’est quoi mon blaze à Valence d’Agen ? 😏"));
-    if(a==="rk klm"||a==="klm rk"){
-      document.getElementById("indice2").textContent="Indice 2 : 7 🔥";
-      status.textContent="Bien joué ❤️";
-    } else { status.textContent="❌ Mauvaise réponse"; wrong(); }
+  let ok=false;
+
+  if(type==="bus"){
+    ok=normalize(prompt("Ligne de bus ?"))==="l10";
+    if(ok) indice1.textContent="Indice 1 : 0";
   }
 
-  // ✅ Indice 3 → chiffre 0
-  if(option==='insta'){
-    const a=normalize(prompt("Mon ancien blaze Insta ? 📱"));
-    if(a==="rk.klm"){
-      document.getElementById("indice3").textContent="Indice 3 : 0 📸";
-      status.textContent="Bien joué ❤️";
-    } else { status.textContent="❌ Mauvaise réponse"; wrong(); }
+  if(type==="blaze"){
+    const a=normalize(prompt("Blaze Valence ?"));
+    ok=(a==="rk klm"||a==="klm rk");
+    if(ok) indice2.textContent="Indice 2 : 7";
   }
 
-  // ✅ Indice 4 → chiffre 8
-  if(option==='jeu'){
-    const a=normalize(prompt("Mon jeu préféré ? 🎮"));
-    if(a==="rocket league"){
-      document.getElementById("indice4").textContent="Indice 4 : 8 🎮";
-      status.textContent="Bien joué ❤️";
-    } else { status.textContent="❌ Mauvaise réponse"; wrong(); }
+  if(type==="insta"){
+    ok=normalize(prompt("Ancien insta ?"))==="rk.klm";
+    if(ok) indice3.textContent="Indice 3 : 0";
   }
 
-  // 💎 BONUS → révèle tout
-  if(option==='bonus'){
-    const answer=normalize(prompt(`🧠 Question ultime :
+  if(type==="jeu"){
+    ok=normalize(prompt("Jeu préféré ?"))==="rocket league";
+    if(ok) indice4.textContent="Indice 4 : 8";
+  }
+
+  if(ok){
+    hintStatus.textContent="✅ Bien joué ❤️";
+  }else{
+    hintStatus.textContent="❌ Mauvaise réponse";
+    lock10min();
+  }
+}
+
+/* 💎 ULTIME */
+function ultimate(){
+  if(Date.now()<lockUntil){
+    hintStatus.textContent="⏳ Patience 😈";
+    return;
+  }
+
+  const ans=normalize(prompt(`🧠 Question ultime
 
 A) RFST
 B) RSST
@@ -222,19 +200,19 @@ H) RTSS
 I) RSSS
 J) RSTS`));
 
-    if(answer==="rsst"){
-      document.getElementById("indice1").textContent="Indice 1 : 0";
-      document.getElementById("indice2").textContent="Indice 2 : 7";
-      document.getElementById("indice3").textContent="Indice 3 : 0";
-      document.getElementById("indice4").textContent="Indice 4 : 8";
-      status.textContent="💖 Tous les indices révélés !";
-    } else {
-      status.textContent="❌ Mauvaise réponse…";
-      wrong();
-    }
+  if(ans==="rsst"){
+    indice1.textContent="Indice 1 : 0";
+    indice2.textContent="Indice 2 : 7";
+    indice3.textContent="Indice 3 : 0";
+    indice4.textContent="Indice 4 : 8";
+    hintStatus.textContent="💖 Tous révélés !";
+  }else{
+    hintStatus.textContent="💀 Mauvais choix";
+    lockUltimate();
   }
 }
 
+/* 🔢 cadenas */
 function next(el){
   el.textContent=(parseInt(el.textContent)+1)%10;
 }
@@ -243,14 +221,10 @@ function checkCode(){
   let code="";
   document.querySelectorAll(".num").forEach(n=>code+=n.textContent);
 
-  const status=document.getElementById("status");
-
   if(code===codeFinal){
-    status.textContent="Cadenas ouvert ❤️";
     document.querySelector(".padlock").textContent="🔓";
-    document.querySelector(".padlock").classList.add("unlock");
-    setTimeout(()=>location.href="sorpresa.html",1500);
-  } else {
+    setTimeout(()=>location.href="sorpresa.html",1200);
+  }else{
     status.textContent="Essaie encore 😘";
   }
 }
