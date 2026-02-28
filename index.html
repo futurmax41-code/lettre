@@ -2,221 +2,181 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Pour Toi Mon Amour ❤️</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pour toi ❤️</title>
 <style>
 body{
-margin:0;
-height:100vh;
-font-family: Georgia, serif;
-background: linear-gradient(135deg,#ff9ecf,#ff4d88,#ffb6d9);
-display:flex;
-justify-content:center;
-align-items:center;
-color:white;
-overflow:hidden;
+  margin:0; font-family:'Comic Sans MS', cursive; background: radial-gradient(circle,#ffccd9,#ff99cc); color:white; text-align:center; overflow-x:hidden;
 }
-
-.card{
-background: rgba(255,255,255,0.15);
-backdrop-filter: blur(15px);
-padding:35px;
-border-radius:25px;
-text-align:center;
-box-shadow:0 0 40px rgba(255,255,255,0.4);
-width:360px;
-}
-
-.lock{
-font-size:60px;
-margin-bottom:10px;
-animation:pulse 2s infinite;
-}
-
-@keyframes pulse{
-0%{transform:scale(1);}
-50%{transform:scale(1.1);}
-100%{transform:scale(1);}
-}
-
-input{
-padding:10px;
-border-radius:10px;
-border:none;
-width:80%;
-text-align:center;
-margin:5px 0;
-}
-
-button{
-margin-top:8px;
-padding:10px 20px;
-border:none;
-border-radius:10px;
-background:#ff2e7a;
-color:white;
-cursor:pointer;
-}
-
-button:hover{
-background:#ff0055;
-}
-
-.choice button{
-display:block;
-width:100%;
-margin:4px 0;
-}
-
-#timer{
-margin-top:10px;
-font-weight:bold;
-}
+#welcome{position:fixed; inset:0; background: radial-gradient(circle,#ff99cc,#ff66aa); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:999; transition:0.8s;}
+#welcome.hide{opacity:0; pointer-events:none;}
+h1{text-shadow:0 0 15px #ff66aa;}
+.btn{background: linear-gradient(45deg,#ff99cc,#ff66aa); border:none;border-radius:40px;color:white;padding:14px 28px; margin:8px;font-size:16px;box-shadow:0 0 15px #ff66aa; cursor:pointer;transition:0.25s;}
+.btn:hover{ transform:scale(1.08); }
+.padlock{ font-size:80px;margin:20px;transition:0.4s; }
+.unlock{ transform:scale(1.2) rotate(10deg); text-shadow:0 0 25px #ff66aa; }
+.code{ display:flex; gap:12px; justify-content:center; margin:20px; }
+.num{ width:60px;height:60px;border-radius:15px; background:rgba(255,255,255,0.25); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; font-size:22px; cursor:pointer; box-shadow:0 0 10px #ff66aa; }
+.kawaii{ position:fixed; top:-30px; animation:fall linear forwards; }
+@keyframes fall{ to{ transform:translateY(110vh); opacity:0; } }
+#timer{ font-size:16px; margin-top:5px; color:#fff; }
 </style>
 </head>
-
 <body>
 
-<div class="card">
-
-<div class="lock">🔒</div>
-<h2>Accès Secret 💌</h2>
-
-<div id="passwordBox">
-<input type="password" id="password" placeholder="Code secret">
-<br>
-<button onclick="checkPassword()">Entrer</button>
+<div id="welcome">
+  <h1>💌 J’ai quelque chose à te dire…</h1>
+  <p>Mais tu dois d’abord débloquer mon cœur 😏❤️</p>
+  <button class="btn" onclick="startGame()">Commencer 💕</button>
 </div>
 
-<!-- QUESTIONS -->
-<div id="questions" style="display:none;">
+<h1>💖 Débloque mon cœur 💖</h1>
+<p>Trouve les indices pour ouvrir le cadenas 🔐</p>
 
-<h3>Indices secrets 🔍</h3>
-
-<input id="q1" placeholder="Mon linge de bus ?">
-<button onclick="checkQ(1,'L10')">Valider</button>
-
-<input id="q2" placeholder="Mon blaze à Valence d’Agen ?">
-<button onclick="checkQ(2,'RK KLM','KLM RK')">Valider</button>
-
-<input id="q3" placeholder="Mon ancien blaze Insta ?">
-<button onclick="checkQ(3,'RK.KLM')">Valider</button>
-
-<input id="q4" placeholder="Mon jeu préféré ?">
-<button onclick="checkQ(4,'ROCKET LEAGUE')">Valider</button>
-
-<button onclick="ultimate()">💣 Question ultime</button>
-
-<div id="timer"></div>
-
+<div>
+  <button class="btn" onclick="revealHint('bus')">🚌 Ligne de bus</button>
+  <button class="btn" onclick="revealHint('blaze')">😏 Blaze Valence</button>
+  <button class="btn" onclick="revealHint('insta')">📱 Ancien Insta</button>
+  <button class="btn" onclick="revealHint('jeu')">🎮 Jeu préféré</button>
+  <button class="btn" onclick="revealHint('bonus')">💎 Question ultime</button>
+  <p id="hintStatus"></p>
+  <p id="timer"></p>
 </div>
 
+<div id="indices">
+  <p id="indice1">Indice 1 : 🔒</p>
+  <p id="indice2">Indice 2 : 🔒</p>
+  <p id="indice3">Indice 3 : 🔒</p>
 </div>
 
-<audio id="music" loop>
-<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_9f6c0d5a9f.mp3">
-</audio>
+<div class="padlock">🔒</div>
+
+<div class="code">
+  <div class="num" onclick="next(this)">0</div>
+  <div class="num" onclick="next(this)">0</div>
+  <div class="num" onclick="next(this)">0</div>
+  <div class="num" onclick="next(this)">0</div>
+  <div class="num" onclick="next(this)">0</div>
+</div>
+
+<button class="btn" onclick="checkCode()">Vérifier 💕</button>
+<p id="status"></p>
 
 <script>
-let fails = parseInt(localStorage.getItem("fails")||"0");
-let lockUntil = parseInt(localStorage.getItem("lockUntil")||"0");
+function startGame(){ document.getElementById("welcome").classList.add("hide"); }
 
-function checkPassword(){
-const pass=document.getElementById("password").value;
+const codeFinal="07083";
+let bonusAttempts=0;
+let bonusLockedUntil=0;
+function normalize(t){ return t.toLowerCase().trim(); }
 
-if(pass==="07083"){
-document.getElementById("passwordBox").style.display="none";
-document.getElementById("questions").style.display="block";
-document.getElementById("music").play();
-}else{
-alert("❌ Mauvais code mon cœur");
-}
-}
+// Pluie kawaii
+setInterval(()=>{
+  const s=["💖","🌸","💌","🌷","💕"];
+  const el=document.createElement("div");
+  el.className="kawaii"; el.innerHTML=s[Math.floor(Math.random()*s.length)];
+  el.style.left=Math.random()*100+"vw"; el.style.animationDuration=(4+Math.random()*3)+"s";
+  el.style.fontSize=(16+Math.random()*20)+"px";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),7000);
+},300);
 
-function normalize(t){
-return t.toUpperCase().trim();
-}
-
-function checkQ(num,...answers){
-const now=Date.now();
-if(now<lockUntil){
-alert("⏳ Attends le timer !");
-return;
-}
-
-const val=normalize(document.getElementById("q"+num).value);
-
-if(answers.map(a=>a.toUpperCase()).includes(val)){
-alert("✅ Bien joué mon amour");
-}else{
-fail();
-}
-}
-
-function ultimate(){
-const now=Date.now();
-if(now<lockUntil){
-alert("⏳ Attends le timer !");
-return;
-}
-
-const choice=prompt(`🧠 Question ultime :
-
-Si tu connais vraiment mes habitudes…
-
-A) RFST
-B) RSST
-C) RSKT
-D) RFTS
-E) SRST
-F) RRST
-G) RSFT
-H) RTSS
-I) RSSS
-J) RSTS`).toUpperCase().trim();
-
-if(choice==="B"){
-window.location.href="surprise.html";
-}else{
-fail();
-}
-}
-
-function fail(){
-fails++;
-localStorage.setItem("fails",fails);
-
-let waits=[1,5,10,24,72];
-let wait=waits[Math.min(fails-1,waits.length-1)];
-
-lockUntil=Date.now()+wait*60*60*1000;
-localStorage.setItem("lockUntil",lockUntil);
-startTimer();
-}
-
-function startTimer(){
-const el=document.getElementById("timer");
-
-const inter=setInterval(()=>{
-const now=Date.now();
-const diff=lockUntil-now;
-
-if(diff<=0){
-el.innerHTML="✨ Tu peux réessayer";
-clearInterval(inter);
-return;
+function revealHint(option){
+  const status=document.getElementById("hintStatus");
+  const timerEl=document.getElementById("timer");
+  function startTimer(timeEnd){
+    clearInterval(window.timerInterval);
+    window.timerInterval=setInterval(()=>{
+      let t=Math.max(0, Math.floor((timeEnd-Date.now())/1000));
+      let m=Math.floor(t/60); let s=t%60;
+      timerEl.textContent=`Temps avant prochaine tentative: ${m}:${s<10?'0':''+s}`;
+      if(t<=0){ clearInterval(window.timerInterval); timerEl.textContent=''; }
+    },500);
+  }
+  const now=Date.now();
+  // Indice 1
+  if(option==='bus'){
+    const a=normalize(prompt("C’est quoi mon ligne de bus ? 🚌"));
+    if(a==="l10"){ document.getElementById("indice1").textContent="Indice 1 : 5 🚌"; status.textContent="Bien joué ❤️"; } 
+    else{ bonusAttempts++; bonusLockedUntil=now+3600000; status.textContent="❌ Mauvaise réponse 😘"; startTimer(bonusLockedUntil); }
+  }
+  // Indice 2
+  if(option==='blaze'){
+    const a=normalize(prompt("C’est quoi mon blaze à Valence d’Agen ? 😏"));
+    if(a==="rk klm"||a==="klm rk"){ document.getElementById("indice2").textContent="Indice 2 : 2 🔥"; status.textContent="Bien joué ❤️"; } 
+    else{ bonusAttempts++; bonusLockedUntil=now+3600000; status.textContent="❌ Mauvaise réponse 😘"; startTimer(bonusLockedUntil);}
+  }
+  // Indice 3
+  if(option==='insta'){
+    const a=normalize(prompt("Mon ancien blaze Insta ? 📱"));
+    if(a==="rk.klm"){ document.getElementById("indice3").textContent="Indice 3 : 0 📸"; status.textContent="Bien joué ❤️"; } 
+    else{ bonusAttempts++; bonusLockedUntil=now+3600000; status.textContent="❌ Mauvaise réponse 😘"; startTimer(bonusLockedUntil);}
+  }
+  // Indice 4
+  if(option==='jeu'){
+    const a=normalize(prompt("Mon jeu préféré ? 🎮"));
+    if(a==="rocket league"){ 
+      if(!document.getElementById("indice4")){ const p=document.createElement("p"); p.id="indice4"; document.getElementById("indices").appendChild(p);}
+      document.getElementById("indice4").textContent="Indice 4 : 8 🎮"; status.textContent="Bien joué ❤️"; 
+    } else{ bonusAttempts++; bonusLockedUntil=now+3600000; status.textContent="❌ Mauvaise réponse 😘"; startTimer(bonusLockedUntil);}
+  }
+  // Bonus ultime
+  if(option==='bonus'){
+    if(Date.now()<bonusLockedUntil){ 
+      const m=Math.ceil((bonusLockedUntil-Date.now())/60000);
+      status.textContent=`⏳ Attends ${m} min avant de réessayer 😘`; 
+      startTimer(bonusLockedUntil);
+      return;
+    }
+    const answer=normalize(prompt("Question ultime : Mélange mes jeux préférés, fast-food et réseau social, 1 lettre de chaque (RFSS) ?"));
+    if(answer==="rfss"){
+      document.getElementById("indice1").textContent="Indice 1 : 0";
+      document.getElementById("indice2").textContent="Indice 2 : 7";
+      document.getElementById("indice3").textContent="Indice 3 : 0";
+      if(!document.getElementById("indice4")){ const p=document.createElement("p"); p.id="indice4"; document.getElementById("indices").appendChild(p);}
+      document.getElementById("indice4").textContent="Indice 4 : 8";
+      status.textContent="💖 Tous les indices révélés !";
+    } else{
+      bonusAttempts++;
+      let waitTime=0;
+      if(bonusAttempts==1) waitTime=3600000;
+      else if(bonusAttempts==2) waitTime=18000000;
+      else waitTime=36000000;
+      bonusLockedUntil=Date.now()+waitTime;
+      status.textContent=`❌ Mauvaise réponse… reviens dans ${Math.floor(waitTime/3600000)}h 😈`;
+      startTimer(bonusLockedUntil);
+    }
+  }
 }
 
-const h=Math.floor(diff/1000/60/60);
-const m=Math.floor(diff/1000/60)%60;
-const s=Math.floor(diff/1000)%60;
-
-el.innerHTML=`🔒 Attente : ${h}h ${m}m ${s}s`;
-},1000);
+function next(el){ el.textContent=(parseInt(el.textContent)+1)%10; }
+function checkCode(){
+  let code=""; document.querySelectorAll(".num").forEach(n=>code+=n.textContent);
+  const status=document.getElementById("status");
+  if(code===codeFinal){
+    status.textContent="Cadenas ouvert ❤️";
+    document.querySelector(".padlock").textContent="🔓";
+    document.querySelector(".padlock").classList.add("unlock");
+    setTimeout(()=>location.href="sorpresa.html",1500);
+  } else { status.textContent="Essaie encore 😘"; }
 }
 
-startTimer();
+// Emoji secret toutes les 60s
+let secretShown=false;
+function spawnSecretEmoji(){
+  if(secretShown) return; secretShown=true;
+  const el=document.createElement("div"); el.textContent="💎"; el.style.position="fixed";
+  el.style.top=Math.random()*80+"vh"; el.style.left="-50px"; el.style.fontSize="40px"; el.style.cursor="pointer";
+  el.style.zIndex="9999"; el.style.transition="left 6s linear";
+  document.body.appendChild(el);
+  setTimeout(()=>{ el.style.left="110vw"; },50);
+  el.onclick=()=>{
+    alert("💌 Petit hack trouvé… le dernier chiffre du code est 3 😘"); el.remove(); secretShown=false;
+  };
+  setTimeout(()=>{ if(document.body.contains(el)){ el.remove(); secretShown=false; } },6500);
+}
+setInterval(spawnSecretEmoji,60000);
+
 </script>
-
 </body>
 </html>
