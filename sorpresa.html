@@ -2,196 +2,95 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Pour toi mon amour 💖</title>
-
+<title>💖 Surprise</title>
 <style>
+
 body{
-  margin:0;
-  height:100vh;
-  overflow:hidden;
-  font-family:'Georgia', serif;
-  background: radial-gradient(circle at center,#0a0015,#000);
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+margin:0;
+height:100vh;
+background: linear-gradient(135deg,#ff9ecb,#ff4d88,#ff1f6b);
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+font-family: "Georgia", serif;
+color:white;
+overflow:hidden;
 }
 
-/* 🌌 étoiles */
-.star{
-  position:fixed;
-  width:2px;
-  height:2px;
-  background:white;
-  border-radius:50%;
-  opacity:0.8;
-  animation:twinkle 2s infinite alternate;
-}
-@keyframes twinkle{
-  from{opacity:0.2}
-  to{opacity:1}
-}
-
-/* 🕳️ trou noir */
-.blackhole{
-  position:absolute;
-  width:220px;
-  height:220px;
-  border-radius:50%;
-  background: radial-gradient(circle,#000 40%,#6a00ff 70%,transparent 75%);
-  box-shadow:0 0 80px #8a2be2;
-  animation:spin 6s linear infinite;
-  cursor:pointer;
-}
-
-@keyframes spin{
-  from{transform:rotate(0)}
-  to{transform:rotate(360deg)}
-}
-
-/* ❤️ cœur cosmique */
-.heart{
-  position:absolute;
-  font-size:90px;
-  animation:beat 1.4s infinite;
-  opacity:0;
-  transition:0.6s;
-}
-
-@keyframes beat{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.15)}
-  100%{transform:scale(1)}
-}
-
-/* ✉️ enveloppe royale */
-.envelope{
-  position:absolute;
-  width:200px;
-  height:130px;
-  background:linear-gradient(135deg,#fff,#f5d0ff);
-  border-radius:12px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:50px;
-  color:#ff2e7a;
-  box-shadow:0 0 40px rgba(255,255,255,0.6);
-  cursor:pointer;
-  transform:scale(0);
-  transition:0.6s;
-}
-
-/* 📜 lettre */
-.letter{
-  position:fixed;
-  width:90%;
-  max-width:420px;
-  background:linear-gradient(180deg,#fff,#ffe6f2);
-  color:#b30059;
-  padding:25px;
-  border-radius:20px;
-  text-align:center;
-  line-height:1.6;
-  box-shadow:0 0 60px rgba(255,0,128,0.5);
-  transform:scale(0);
-  transition:0.6s;
-  z-index:10;
-}
-
+/* titre */
 .title{
-  position:absolute;
-  top:8%;
-  font-size:22px;
-  text-align:center;
-  opacity:0.9;
+font-size:3rem;
+margin-bottom:40px;
+text-shadow:0 0 20px rgba(255,255,255,0.7);
 }
+
+/* enveloppe */
+.envelope{
+font-size:120px;
+cursor:pointer;
+transition:0.4s;
+}
+
+.envelope:hover{
+transform:scale(1.15) rotate(-5deg);
+}
+
+/* lettre */
+.letter{
+position:absolute;
+bottom:-400px;
+background:white;
+color:#ff2e7a;
+padding:30px;
+width:320px;
+border-radius:20px;
+box-shadow:0 20px 60px rgba(0,0,0,0.3);
+text-align:center;
+font-size:1.2rem;
+font-weight:bold;
+transition:0.8s ease;
+}
+
+/* lettre visible */
+.letter.show{
+bottom:120px;
+}
+
+/* grand L */
+.bigL{
+font-size:4rem;
+color:#ff2e7a;
+margin-bottom:15px;
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="title">🌌 Appuie sur le trou noir… mon cœur t’attend ❤️</div>
+<h1 class="title">💖 Pour Toi 💖</h1>
 
-<div class="blackhole" onclick="openHeart()"></div>
-<div class="heart" id="heart">❤️</div>
-<div class="envelope" id="env" onclick="openLetter()">L</div>
+<div class="envelope" onclick="openLetter()">💌</div>
 
-<div class="letter" id="letter">
-<h2>💌 Pour toi mon amour</h2>
+<div id="letter" class="letter">
+<div class="bigL">L</div>
 
-<p>
-Je voulais juste te dire…  
-tu me manques plus que tu crois.
-</p>
+Mon amour ❤️<br><br>
 
-<p>
-Même quand je joue à Rocket League 🎮  
-même quand je traîne sur TikTok 📱  
-y’a toujours une partie de moi  
-qui pense à toi.
-</p>
+Depuis que tu es entrée dans ma vie,<br>
+tout est devenu plus beau…<br><br>
 
-<p>
-Si parfois je t’ai fait du mal…  
-je suis sincèrement désolé.
-</p>
+Je t’aime infiniment 💖<br><br>
 
-<p style="font-size:20px;font-weight:bold;">
-T’es importante pour moi ❤️
-</p>
-
-<p>
-— Ton gars 😏💘
-</p>
+— Erkheli
 </div>
 
 <script>
-
-/* ⭐ étoiles */
-for(let i=0;i<120;i++){
-  const s=document.createElement("div");
-  s.className="star";
-  s.style.left=Math.random()*100+"vw";
-  s.style.top=Math.random()*100+"vh";
-  s.style.animationDuration=(1+Math.random()*2)+"s";
-  document.body.appendChild(s);
-}
-
-/* 🕳️ → ❤️ */
-function openHeart(){
-  document.querySelector(".blackhole").style.transform="scale(0)";
-  const h=document.getElementById("heart");
-  h.style.opacity=1;
-  setTimeout(()=>{
-    document.getElementById("env").style.transform="scale(1)";
-  },900);
-}
-
-/* ✉️ → 📜 */
 function openLetter(){
-  document.getElementById("letter").style.transform="scale(1)";
+document.getElementById("letter").classList.add("show");
 }
-
-/* 💖 pluie douce */
-setInterval(()=>{
-  const e=document.createElement("div");
-  e.textContent="💖";
-  e.style.position="fixed";
-  e.style.left=Math.random()*100+"vw";
-  e.style.top="-20px";
-  e.style.fontSize="22px";
-  e.style.animation="fall 5s linear forwards";
-  document.body.appendChild(e);
-  setTimeout(()=>e.remove(),5000);
-},900);
-
 </script>
-
-<style>
-@keyframes fall{
-  to{ transform:translateY(110vh); opacity:0; }
-}
-</style>
 
 </body>
 </html>
