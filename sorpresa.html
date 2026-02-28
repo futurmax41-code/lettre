@@ -2,137 +2,196 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Surprise mon amour 💘</title>
+<title>Pour toi mon amour 💖</title>
 
 <style>
 body{
-margin:0;
-height:100vh;
-background: radial-gradient(circle at center,
-#1a0033,
-#000000);
-overflow:hidden;
-font-family: 'Georgia', serif;
+  margin:0;
+  height:100vh;
+  overflow:hidden;
+  font-family:'Georgia', serif;
+  background: radial-gradient(circle at center,#0a0015,#000);
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-/* 🌌 Trou noir romantique */
+/* 🌌 étoiles */
+.star{
+  position:fixed;
+  width:2px;
+  height:2px;
+  background:white;
+  border-radius:50%;
+  opacity:0.8;
+  animation:twinkle 2s infinite alternate;
+}
+@keyframes twinkle{
+  from{opacity:0.2}
+  to{opacity:1}
+}
+
+/* 🕳️ trou noir */
 .blackhole{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:300px;
-height:300px;
-border-radius:50%;
-background: radial-gradient(circle,
-#000,
-#2b004f,
-#000);
-box-shadow:
-0 0 60px #ff4d88,
-0 0 120px #9900ff;
-animation: spin 20s linear infinite;
+  position:absolute;
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background: radial-gradient(circle,#000 40%,#6a00ff 70%,transparent 75%);
+  box-shadow:0 0 80px #8a2be2;
+  animation:spin 6s linear infinite;
+  cursor:pointer;
 }
 
 @keyframes spin{
-from{transform:translate(-50%,-50%) rotate(0deg);}
-to{transform:translate(-50%,-50%) rotate(360deg);}
+  from{transform:rotate(0)}
+  to{transform:rotate(360deg)}
 }
 
-/* 💌 enveloppe royale */
+/* ❤️ cœur cosmique */
+.heart{
+  position:absolute;
+  font-size:90px;
+  animation:beat 1.4s infinite;
+  opacity:0;
+  transition:0.6s;
+}
+
+@keyframes beat{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+  100%{transform:scale(1)}
+}
+
+/* ✉️ enveloppe royale */
 .envelope{
-position:absolute;
-top:55%;
-left:50%;
-transform:translate(-50%,-50%);
-width:180px;
-height:120px;
-background: linear-gradient(135deg,#fff,#ffe6f2);
-border-radius:12px;
-cursor:pointer;
-box-shadow:0 0 25px rgba(255,255,255,0.6);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:60px;
+  position:absolute;
+  width:200px;
+  height:130px;
+  background:linear-gradient(135deg,#fff,#f5d0ff);
+  border-radius:12px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:50px;
+  color:#ff2e7a;
+  box-shadow:0 0 40px rgba(255,255,255,0.6);
+  cursor:pointer;
+  transform:scale(0);
+  transition:0.6s;
 }
 
 /* 📜 lettre */
 .letter{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%) scale(0);
-width:320px;
-padding:30px;
-background:linear-gradient(#fff,#fff0f5);
-border-radius:20px;
-text-align:center;
-font-size:20px;
-transition:0.6s;
-box-shadow:0 0 40px rgba(255,255,255,0.7);
+  position:fixed;
+  width:90%;
+  max-width:420px;
+  background:linear-gradient(180deg,#fff,#ffe6f2);
+  color:#b30059;
+  padding:25px;
+  border-radius:20px;
+  text-align:center;
+  line-height:1.6;
+  box-shadow:0 0 60px rgba(255,0,128,0.5);
+  transform:scale(0);
+  transition:0.6s;
+  z-index:10;
 }
 
-.letter.show{
-transform:translate(-50%,-50%) scale(1);
-}
-
-/* 🌹 roses réalistes */
-.rose{
-position:absolute;
-font-size:30px;
-animation: float 6s infinite ease-in-out;
-}
-
-@keyframes float{
-0%{transform:translateY(0);}
-50%{transform:translateY(-20px);}
-100%{transform:translateY(0);}
-}
-
-/* 💖 signature */
-.signature{
-font-size:32px;
-color:#ff4d88;
-text-shadow:0 0 15px #ff99cc;
-margin-top:15px;
+.title{
+  position:absolute;
+  top:8%;
+  font-size:22px;
+  text-align:center;
+  opacity:0.9;
 }
 </style>
 </head>
-
 <body>
 
-<div class="blackhole"></div>
+<div class="title">🌌 Appuie sur le trou noir… mon cœur t’attend ❤️</div>
 
-<div class="envelope" onclick="openLetter()">
-💌
-</div>
+<div class="blackhole" onclick="openHeart()"></div>
+<div class="heart" id="heart">❤️</div>
+<div class="envelope" id="env" onclick="openLetter()">L</div>
 
-<div id="letter" class="letter">
+<div class="letter" id="letter">
+<h2>💌 Pour toi mon amour</h2>
+
 <p>
-Depuis le premier regard…<br>
-j’ai su que toi et moi c’était écrit. ✨
+Je voulais juste te dire…  
+tu me manques plus que tu crois.
 </p>
 
 <p>
-Tu es mon bonheur, ma folie,<br>
-et la plus belle chose qui me soit arrivée.
+Même quand je joue à Rocket League 🎮  
+même quand je traîne sur TikTok 📱  
+y’a toujours une partie de moi  
+qui pense à toi.
 </p>
 
-<div class="signature">❤️ L ❤️</div>
-</div>
+<p>
+Si parfois je t’ai fait du mal…  
+je suis sincèrement désolé.
+</p>
 
-<!-- 🌹 roses décor -->
-<div class="rose" style="top:10%;left:15%;">🌹</div>
-<div class="rose" style="top:20%;left:80%;">🌹</div>
-<div class="rose" style="top:75%;left:20%;">🌹</div>
-<div class="rose" style="top:85%;left:70%;">🌹</div>
+<p style="font-size:20px;font-weight:bold;">
+T’es importante pour moi ❤️
+</p>
+
+<p>
+— Ton gars 😏💘
+</p>
+</div>
 
 <script>
-function openLetter(){
-document.getElementById("letter").classList.add("show");
+
+/* ⭐ étoiles */
+for(let i=0;i<120;i++){
+  const s=document.createElement("div");
+  s.className="star";
+  s.style.left=Math.random()*100+"vw";
+  s.style.top=Math.random()*100+"vh";
+  s.style.animationDuration=(1+Math.random()*2)+"s";
+  document.body.appendChild(s);
 }
+
+/* 🕳️ → ❤️ */
+function openHeart(){
+  document.querySelector(".blackhole").style.transform="scale(0)";
+  const h=document.getElementById("heart");
+  h.style.opacity=1;
+  setTimeout(()=>{
+    document.getElementById("env").style.transform="scale(1)";
+  },900);
+}
+
+/* ✉️ → 📜 */
+function openLetter(){
+  document.getElementById("letter").style.transform="scale(1)";
+}
+
+/* 💖 pluie douce */
+setInterval(()=>{
+  const e=document.createElement("div");
+  e.textContent="💖";
+  e.style.position="fixed";
+  e.style.left=Math.random()*100+"vw";
+  e.style.top="-20px";
+  e.style.fontSize="22px";
+  e.style.animation="fall 5s linear forwards";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),5000);
+},900);
+
 </script>
+
+<style>
+@keyframes fall{
+  to{ transform:translateY(110vh); opacity:0; }
+}
+</style>
 
 </body>
 </html>
