@@ -2,41 +2,110 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Pour Ma Princesse ❤️</title>
-<link rel="stylesheet" href="style.css">
+<title>Pour Toi Mon Amour ❤️</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+font-family: Georgia, serif;
+background: linear-gradient(135deg,#ff9ecf,#ff4d88,#ffb6d9);
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+overflow:hidden;
+}
+
+.card{
+background: rgba(255,255,255,0.15);
+backdrop-filter: blur(15px);
+padding:35px;
+border-radius:25px;
+text-align:center;
+box-shadow:0 0 40px rgba(255,255,255,0.4);
+width:360px;
+}
+
+.lock{
+font-size:60px;
+margin-bottom:10px;
+animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.1);}
+100%{transform:scale(1);}
+}
+
+input{
+padding:10px;
+border-radius:10px;
+border:none;
+width:80%;
+text-align:center;
+margin:5px 0;
+}
+
+button{
+margin-top:8px;
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:#ff2e7a;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff0055;
+}
+
+.choice button{
+display:block;
+width:100%;
+margin:4px 0;
+}
+
+#timer{
+margin-top:10px;
+font-weight:bold;
+}
+</style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="card">
 
-<h1>💖 Bienvenue mon amour 💖</h1>
+<div class="lock">🔒</div>
+<h2>Accès Secret 💌</h2>
 
 <div id="passwordBox">
 <input type="password" id="password" placeholder="Code secret">
+<br>
 <button onclick="checkPassword()">Entrer</button>
 </div>
 
-<div id="quiz" style="display:none;">
-<h2>🎯 Question ultime</h2>
+<!-- QUESTIONS -->
+<div id="questions" style="display:none;">
 
-<p>
-Mélange mes passions (jeu préféré, fast-food préféré,
-réseau social préféré, ville) — quelle combinaison est correcte ?
-</p>
+<h3>Indices secrets 🔍</h3>
 
-<div class="choices">
-<button onclick="answer(false)">RFST</button>
-<button onclick="answer(false)">RSFT</button>
-<button onclick="answer(true)">RFSS</button>
-<button onclick="answer(false)">FFSR</button>
-<button onclick="answer(false)">TSRF</button>
-<button onclick="answer(false)">SRRF</button>
-<button onclick="answer(false)">FRSS</button>
-<button onclick="answer(false)">RRFS</button>
-<button onclick="answer(false)">SFRR</button>
-<button onclick="answer(false)">TRFS</button>
-</div>
+<input id="q1" placeholder="Mon linge de bus ?">
+<button onclick="checkQ(1,'L10')">Valider</button>
+
+<input id="q2" placeholder="Mon blaze à Valence d’Agen ?">
+<button onclick="checkQ(2,'RK KLM','KLM RK')">Valider</button>
+
+<input id="q3" placeholder="Mon ancien blaze Insta ?">
+<button onclick="checkQ(3,'RK.KLM')">Valider</button>
+
+<input id="q4" placeholder="Mon jeu préféré ?">
+<button onclick="checkQ(4,'ROCKET LEAGUE')">Valider</button>
+
+<button onclick="ultimate()">💣 Question ultime</button>
 
 <div id="timer"></div>
 
@@ -49,62 +118,104 @@ réseau social préféré, ville) — quelle combinaison est correcte ?
 </audio>
 
 <script>
-let attempts = 0;
-let lockUntil = 0;
+let fails = parseInt(localStorage.getItem("fails")||"0");
+let lockUntil = parseInt(localStorage.getItem("lockUntil")||"0");
 
-function checkPassword() {
-  const pass = document.getElementById("password").value;
-  if (pass === "07083") {
-    document.getElementById("passwordBox").style.display = "none";
-    document.getElementById("quiz").style.display = "block";
-    document.getElementById("music").play();
-  } else {
-    alert("❌ Mauvais code mon cœur");
-  }
+function checkPassword(){
+const pass=document.getElementById("password").value;
+
+if(pass==="07083"){
+document.getElementById("passwordBox").style.display="none";
+document.getElementById("questions").style.display="block";
+document.getElementById("music").play();
+}else{
+alert("❌ Mauvais code mon cœur");
+}
 }
 
-function answer(correct) {
-  const now = Date.now();
-
-  if (now < lockUntil) {
-    alert("⏳ Attends la fin du timer !");
-    return;
-  }
-
-  if (correct) {
-    window.location.href = "surprise.html";
-  } else {
-    attempts++;
-
-    let waitHours = [1,5,10,24,72];
-    let wait = waitHours[Math.min(attempts-1, waitHours.length-1)];
-
-    lockUntil = now + wait*60*60*1000;
-    startTimer();
-  }
+function normalize(t){
+return t.toUpperCase().trim();
 }
 
-function startTimer() {
-  const timer = document.getElementById("timer");
-
-  const interval = setInterval(() => {
-    const now = Date.now();
-    const diff = lockUntil - now;
-
-    if (diff <= 0) {
-      timer.innerHTML = "";
-      clearInterval(interval);
-      return;
-    }
-
-    const h = Math.floor(diff/1000/60/60);
-    const m = Math.floor(diff/1000/60)%60;
-    const s = Math.floor(diff/1000)%60;
-
-    timer.innerHTML =
-      `⏳ Attente : ${h}h ${m}m ${s}s`;
-  },1000);
+function checkQ(num,...answers){
+const now=Date.now();
+if(now<lockUntil){
+alert("⏳ Attends le timer !");
+return;
 }
+
+const val=normalize(document.getElementById("q"+num).value);
+
+if(answers.map(a=>a.toUpperCase()).includes(val)){
+alert("✅ Bien joué mon amour");
+}else{
+fail();
+}
+}
+
+function ultimate(){
+const now=Date.now();
+if(now<lockUntil){
+alert("⏳ Attends le timer !");
+return;
+}
+
+const choice=prompt(`🧠 Question ultime :
+
+Si tu connais vraiment mes habitudes…
+
+A) RFST
+B) RSST
+C) RSKT
+D) RFTS
+E) SRST
+F) RRST
+G) RSFT
+H) RTSS
+I) RSSS
+J) RSTS`).toUpperCase().trim();
+
+if(choice==="B"){
+window.location.href="surprise.html";
+}else{
+fail();
+}
+}
+
+function fail(){
+fails++;
+localStorage.setItem("fails",fails);
+
+let waits=[1,5,10,24,72];
+let wait=waits[Math.min(fails-1,waits.length-1)];
+
+lockUntil=Date.now()+wait*60*60*1000;
+localStorage.setItem("lockUntil",lockUntil);
+startTimer();
+}
+
+function startTimer(){
+const el=document.getElementById("timer");
+
+const inter=setInterval(()=>{
+const now=Date.now();
+const diff=lockUntil-now;
+
+if(diff<=0){
+el.innerHTML="✨ Tu peux réessayer";
+clearInterval(inter);
+return;
+}
+
+const h=Math.floor(diff/1000/60/60);
+const m=Math.floor(diff/1000/60)%60;
+const s=Math.floor(diff/1000)%60;
+
+el.innerHTML=`🔒 Attente : ${h}h ${m}m ${s}s`;
+},1000);
+}
+
+startTimer();
 </script>
 
 </body>
